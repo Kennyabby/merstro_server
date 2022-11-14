@@ -1,6 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-require('dotenv').config({ path: __dirname + '/.env' })
+// require('dotenv').config({ path: __dirname + '/.env' })
 const nodemailer = require('nodemailer')
 const emailValidator = require('deep-email-validator')
 const cors = require('cors')
