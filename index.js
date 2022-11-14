@@ -16,9 +16,7 @@ var propList = []
 var array = {}
 var updated = false
 var delivered = false
-var sessionClosed = false
-
-app.set('view engine', 'ejs')
+var sessionClosed = false.app.set('view engine', 'ejs')
 app.use(
   session({
     resave: false,
@@ -49,9 +47,9 @@ var userProfile
 app.use(passport.initialize())
 app.use(passport.session())
 
-// app.get('/', function (req, res) {
-//   res.render('pages/auth')
-// })
+app.get('/', function (req, res) {
+  res.render('pages/auth')
+})
 
 // app.get('/success', (req, res) => res.send(userProfile))
 app.get('/error', (req, res) => res.send('error logging in'))
