@@ -68,7 +68,7 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://merstro-server.herokuapp.com/auth/google/callback',
+      callbackURL: 'http://localhost:' + port + '/auth/google/callback',
     },
     function (accessToken, refreshToken, profile, done) {
       userProfile = profile
