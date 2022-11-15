@@ -23,10 +23,36 @@
           <span class="fa fa-lock"></span> Merstro FinTech Social Authentication
         </h1>
         <p>Login or Register with:</p>
-        <a href="/auth/google" class="btn btn-danger"
+        <!-- <div id="ggl">
+          <span class="fa fa-google"></span> SignIn with Google
+        </div> -->
+        <a href="/auth/google"
           ><span class="fa fa-google"></span> SignIn with Google</a
         >
       </div>
     </div>
+    <script>
+      // const authLink = document.getElementById('ggl')
+      // const checkMailAuth = async () => {
+      //   try {
+      //     const opt = {
+      //       method: 'GET',
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //       },
+      //     }
+      //     const resp = await fetch('/auth/google', opt)
+      //     const response = await resp.json()
+      //     console.log(response)
+      //     const userProfile = response.userProfile
+      //     console.log(userProfile)
+      //   } catch (TypeError) {}
+      // }
+      // authLink.onclick = async (e) => {
+      //   console.log('clicked')
+      //   // e.preventDefault()
+      //   await checkMailAuth()
+      // }
+    </script>
   </body>
 </html>

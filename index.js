@@ -16,7 +16,8 @@ var propList = []
 var array = {}
 var updated = false
 var delivered = false
-var sessionClosed = false.app.set('view engine', 'ejs')
+var sessionClosed = false
+app.set('view engine', 'ejs')
 app.use(
   session({
     resave: false,
@@ -77,14 +78,12 @@ passport.use(
   )
 )
 
-app.post(
+app.get(
   '/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 )
 app.post('/postUserDetails', async (req, res) => {
-  const user = await req.body.userProfile
-  const password = user.password
-  user.sessionId = ObjectId()
+  const user = userProfile
   await main(
     (func = 'createDoc'),
     (database = 'merstro'),
@@ -101,12 +100,23 @@ app.post('/postUserDetails', async (req, res) => {
 app.get(
   '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/error' }),
-  function (req, res) {
+  async function (req, res) {
     // Successful authentication, redirect success.
     // res.redirect('/success')
-    res.json({
-      userProfile: userProfile,
-    })
+    const user = userProfile
+    await main(
+      (func = 'createDoc'),
+      (database = 'merstro'),
+      (collection = 'usersDatabase'),
+      (data = user)
+    )
+      .catch(console.error)
+      .then(async () => {
+        console.log('delevered: ', delivered)
+        res.json({
+          isDelivered: delivered,
+        })
+      })
   }
 )
 app.listen(port, () => console.log('App listening on port ' + port))
