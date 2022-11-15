@@ -122,8 +122,8 @@ app.get(
 app.listen(port, () => console.log('App listening on port ' + port))
 
 const main = async (func, database, collection, data, limit) => {
-  const uri = 'mongodb://localhost:27017'
-  // const uri = process.env.MONGO_URL
+  // const uri = 'mongodb://localhost:27017'
+  const uri = process.env.MONGO_URL
   const client = new MongoClient(uri, { useNewUrlParser: true })
 
   const listDatabases = async () => {
