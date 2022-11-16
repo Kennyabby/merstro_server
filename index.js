@@ -7,6 +7,7 @@ const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 3000
 const { MongoClient } = require('mongodb')
+const ObjectId = require('mongodb').ObjectId
 const session = require('express-session')
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
@@ -34,7 +35,6 @@ app.use(
   })
 )
 app.use(cors())
-app.use(bodyParser.json())
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
@@ -82,12 +82,13 @@ app.get(
   '/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 )
-app.post('/postUserDetails', async (req, res) => {
-  const user = userProfile
+app.post('/post_user', async (req, res) => {
+  const user = req.body
+  user.session_id = ObjectId()
   await main(
     (func = 'createDoc'),
     (database = 'merstro'),
-    (collection = 'usersDatabase'),
+    (collection = 'usersDb'),
     (data = user)
   )
     .catch(console.error)
@@ -95,6 +96,64 @@ app.post('/postUserDetails', async (req, res) => {
       res.json({
         isDelivered: delivered,
       })
+    })
+})
+app.get('/get_user', async (req, res) => {
+  await main(
+    (func = 'findOne'),
+    (database = 'merstro'),
+    (collection = 'usersDb'),
+    (data =
+      req.body.user_id !== undefined
+        ? req.body
+        : { session_id: ObjectId(req.body.session_id) })
+  )
+    .catch(console.error)
+    .then(() => {
+      if (req.body.user_id) {
+        return res.status(200).json({
+          user: array[0],
+        })
+      } else {
+        req.status(400).send('inValid Credentials, provide user email.')
+      }
+      if (req.body === null || req.body === undefined) {
+        req
+          .status(400)
+          .send(
+            'No id provided in the json body. Please provide a field "user_id" in the body field containing the user unique id, like "email". use the format body:JSON.stringify({user_id: email}) '
+          )
+      }
+    })
+})
+app.post('/login', async (req, res) => {
+  await main(
+    (func = 'findOne'),
+    (database = 'merstro'),
+    (collection = 'usersDb'),
+    (data = { user_id: req.body.user_id })
+  )
+    .catch(console.error)
+    .then(() => {
+      if (array[0] !== undefined && array[0] !== null) {
+        var password = array[0].password
+        if (password.trim() === req.body.pass.trim()) {
+          res.status(200).json({
+            id: array[0].session_id,
+            confirmed: true,
+          })
+        } else {
+          res.res.status(400).send('Invalid Credentials.').json({
+            id: '',
+            confirmed: false,
+          })
+        }
+      } else {
+        res.status(400).send('Invalid Credentials.').json({
+          id: '',
+          confirmed: false,
+        })
+      }
     })
 })
 app.get(
