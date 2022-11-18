@@ -143,16 +143,10 @@ app.post('/login', async (req, res) => {
             confirmed: true,
           })
         } else {
-          res.res.status(400).send('Invalid Credentials.').json({
-            id: '',
-            confirmed: false,
-          })
+          res.status(400).send('Invalid Credentials.')
         }
       } else {
-        res.status(400).send('Invalid Credentials.').json({
-          id: '',
-          confirmed: false,
-        })
+        res.status(400).send('Invalid Credentials.')
       }
     })
 })
